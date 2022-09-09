@@ -15,25 +15,27 @@ pipeline {
 			}
 		  }
 		}
-		stage ('Deployments'){
-        parallel{
+	stage ('Deployments'){
+        	parallel{
 			stage ('Deploy to stage'){
 				steps {
-					build job:'deploy_to_staging'
-          }
-		}
+					sh "cp **/target/*.war /home/alex/Programms/tomcat-staging/webapps"
+         			}
+			}
 			stage ('Deploy to prod'){
 				steps {
 					timeout(time:5, until:'DAYS'){
 					input message:'Approve Prod deployment?'
-				}
-				build job:'deploy_to_prod'
+					}
+					sh "cp **/target/*.war /home/alex/Programms/tomcat-prod/webapps"
 				}
 			}
-          }
-		}
+          	}
+	}
 	}
 }
+
+
 		
          
   
